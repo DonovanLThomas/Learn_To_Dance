@@ -6,8 +6,8 @@ from capturing_poses import extract_keypoints, mediapipe_detection
 import numpy as np
 import json
 
-MODEL_PATH = "best_dance_model.weights.h5"
-LABEL_MAP_PATH = "label_map.json"
+MODEL_PATH = "models/best_dance_model.weights.h5"
+LABEL_MAP_PATH = "models/label_map.json"
 
 def build_model(input_shape, num_classes):
     model = Sequential([

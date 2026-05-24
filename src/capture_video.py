@@ -1,7 +1,6 @@
 import numpy as np
 import cv2
 import os
-import subprocess
 import time
 
 def gstreamer_pipeline(
@@ -45,9 +44,12 @@ if not cap.isOpened():
 
 fourcc = cv2.VideoWriter_fourcc(*"mp4v")
 
+
+
 recording = False
 out = None
 last_saved_clip = None
+dances = ["idle", "dab", "milly rock", ]
 
 print("Controls:")
 print("r = start recording")

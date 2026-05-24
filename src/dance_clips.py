@@ -43,7 +43,7 @@ MAX_CLIPS = 40
 dances = ["idle", "dab", "milly-rock", "dougie"]
 
 for dance in dances:
-    os.makedirs(f"dance_clips/{dance}", exist_ok=True)
+    os.makedirs(f"data/raw_clips/{dance}", exist_ok=True)
 
 cap = cv2.VideoCapture(gstreamer_pipeline(), cv2.CAP_GSTREAMER)
 
@@ -118,7 +118,7 @@ while True:
             recording = True
             recording_start_time = time.time()
 
-            filename = f"dance_clips/{current_dance}/{current_dance}_{clip_number}.mp4"
+            filename = f"data/raw_clips/{current_dance}/{current_dance}_{clip_number}.mp4"
             fourcc = cv2.VideoWriter_fourcc(*"mp4v")
             out = cv2.VideoWriter(filename, fourcc, FPS, (WIDTH, HEIGHT))
 

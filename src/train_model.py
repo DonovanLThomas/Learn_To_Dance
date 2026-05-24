@@ -7,7 +7,10 @@ from tensorflow.keras.callbacks import ModelCheckpoint
 from sklearn.metrics import confusion_matrix, classification_report
 import json
 
-DATA_PATH = "pose_data"
+DATA_PATH = "data/pose_data"
+MODEL_PATH = "models/best_dance_model.keras"
+WEIGHTS_PATH = "models/best_dance_model.weights.h5"
+LABEL_MAP_PATH = "models/label_map.json"
 SEQUENCE_LENGTH = 120
 
 
@@ -97,8 +100,10 @@ def main():
     model = build_model(input_shape, num_classes)
     model.summary()
 
+    os.makedirs("models", exist_ok=True)
+
     checkpoint = ModelCheckpoint(
-        "best_dance_model.keras",
+        MODEL_PATH,
         monitor="val_accuracy",
         save_best_only=True,
         mode="max",
@@ -114,13 +119,13 @@ def main():
         callbacks=[checkpoint]
     )
 
-    best_model = load_model("best_dance_model.keras")
+    best_model = load_model(MODEL_PATH)
 
 
     test_loss, test_accuracy = best_model.evaluate(X_test, y_test)
     print("Best model test accuracy:", test_accuracy)
 
-    best_model.save_weights("best_dance_model.weights.h5")
+    best_model.save_weights(WEIGHTS_PATH)
 
     y_pred_probs = best_model.predict(X_test)
     y_pred = np.argmax(y_pred_probs, axis=1)
@@ -132,7 +137,7 @@ def main():
         target_names=list(label_map.keys())
     ))
     
-    with open("label_map.json", "w") as f:
+    with open(LABEL_MAP_PATH, "w") as f:
         json.dump(label_map, f)
 
 main()

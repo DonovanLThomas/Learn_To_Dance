@@ -1,1 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+venv_old/
+.venv/
+env/
+
+# Local tool/runtime files
+.agents/
+.codex/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Personal/generated video data
 clips/
+dance_clips/
+*.mp4
+*.mov
+*.avi
+*.mkv
+
+# Generated pose datasets
+/pose_data/
+*.npy
+*.npz
+
+# Generated model artifacts
+*.keras
+*.h5
+*.p
+*.pkl
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Keep optional project folder placeholders
+!data/.gitkeep
+!data/raw_clips/.gitkeep
+!data/pose_data/.gitkeep
+!models/.gitkeep

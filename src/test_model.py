@@ -3,10 +3,10 @@ import json
 from tensorflow.keras.models import load_model
 import os
 
-MODEL_PATH = "best_dance_model.keras"
-LABEL_MAP_PATH = "label_map.json"
+MODEL_PATH = "models/best_dance_model.keras"
+LABEL_MAP_PATH = "models/label_map.json"
 SEQUENCE_LENGTH = 120
-DATA_PATH = "pose_data"
+DATA_PATH = "data/pose_data"
 
 with open(LABEL_MAP_PATH, "r") as f:
     label_map = json.load(f)

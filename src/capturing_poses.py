@@ -6,8 +6,8 @@ import mediapipe as mp
 mp_holistic = mp.solutions.holistic
 mp_drawing = mp.solutions.drawing_utils
 
-VIDEO_DIR = "/Users/dono_1k/Learn_To_Dance/dance_clips"
-POSE_DIR = "/Users/dono_1k/Learn_To_Dance/pose_data"
+VIDEO_DIR = "data/raw_clips"
+POSE_DIR = "data/pose_data"
 
 
 def build_video_dict(video_dir):
