@@ -8,9 +8,6 @@ import json
 
 MODEL_PATH = "best_dance_model.weights.h5"
 LABEL_MAP_PATH = "label_map.json"
-HEIGHT = 540
-WIDTH = 960
-FPS = 30
 
 def build_model(input_shape, num_classes):
     model = Sequential([
@@ -38,14 +35,13 @@ mp_holistic = mp.solutions.holistic
 mp_drawing = mp.solutions.drawing_utils
 
 sequence = []
-threshold = 0.4
-
+threshold = 0.6
 def gstreamer_pipeline(
     sensor_id=0,
-    capture_width=1920,
-    capture_height=1080,
-    display_width=960,
-    display_height=540,
+    capture_width=1640,
+    capture_height=1232,
+    display_width=820,
+    display_height=616,
     framerate=30,
     flip_method=6,
 ):
@@ -68,11 +64,19 @@ def gstreamer_pipeline(
         )
     )
 
+WIDTH = 820
+HEIGHT = 616
+FPS = 30
+
 cap = cv2.VideoCapture(gstreamer_pipeline(), cv2.CAP_GSTREAMER)
 
+if not cap.isOpened():
+    print("Camera failed to open")
+    exit()
+
 num_classes = len(label_map)
-model = build_model((120, 132), 4)
-model.load_weights("best_dance_model.weights.h5")
+model = build_model((120, 132), num_classes)
+model.load_weights(MODEL_PATH)
 
 with mp_holistic.Holistic( min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
     while cap.isOpened():
@@ -84,7 +88,6 @@ with mp_holistic.Holistic( min_detection_confidence=0.5, min_tracking_confidence
             break
 
         image, results = mediapipe_detection(frame, holistic)
-        print(results)
 
         keypoints = extract_keypoints(results)
         sequence.append(keypoints)
@@ -97,6 +100,9 @@ with mp_holistic.Holistic( min_detection_confidence=0.5, min_tracking_confidence
             predicted_index = np.argmax(res)
             predicted_label = index_to_label[predicted_index]
             confidence = res[predicted_index]
+
+            for i, prob in enumerate(res):
+                print(index_to_label[i], round(float(prob), 3))
 
             if confidence > threshold:
                 cv2.putText(image,f"{predicted_label}: {confidence:.2f}", (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
@@ -111,4 +117,3 @@ cap.release()
 cv2.destroyAllWindows()
 
     
-
