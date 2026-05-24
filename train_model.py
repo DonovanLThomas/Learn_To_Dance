@@ -116,8 +116,11 @@ def main():
 
     best_model = load_model("best_dance_model.keras")
 
+
     test_loss, test_accuracy = best_model.evaluate(X_test, y_test)
     print("Best model test accuracy:", test_accuracy)
+
+    best_model.save_weights("best_dance_model.weights.h5")
 
     y_pred_probs = best_model.predict(X_test)
     y_pred = np.argmax(y_pred_probs, axis=1)

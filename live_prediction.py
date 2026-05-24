@@ -1,15 +1,33 @@
 import mediapipe as mp
 import cv2
-from tensorflow.keras.models import load_model
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Input, LSTM, Dense, Dropout
 from capturing_poses import extract_keypoints, mediapipe_detection
 import numpy as np
 import json
 
-MODEL_PATH = "best_dance_model.keras"
+MODEL_PATH = "best_dance_model.weights.h5"
 LABEL_MAP_PATH = "label_map.json"
 HEIGHT = 540
 WIDTH = 960
 FPS = 30
+
+def build_model(input_shape, num_classes):
+    model = Sequential([
+        Input(shape=input_shape),
+        LSTM(64, return_sequences=False),
+        Dropout(0.3),
+        Dense(32, activation="relu"),
+        Dense(num_classes, activation="softmax"),
+    ])
+
+    model.compile(
+        optimizer="adam",
+        loss="sparse_categorical_crossentropy",
+        metrics=["accuracy"]
+    )
+
+    return model
 
 with open(LABEL_MAP_PATH, "r") as f:
     label_map = json.load(f)
@@ -51,8 +69,11 @@ def gstreamer_pipeline(
     )
 
 cap = cv2.VideoCapture(gstreamer_pipeline(), cv2.CAP_GSTREAMER)
-model = load_model(MODEL_PATH
-                   )
+
+num_classes = len(label_map)
+model = build_model((120, 132), 4)
+model.load_weights("best_dance_model.weights.h5")
+
 with mp_holistic.Holistic( min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
     while cap.isOpened():
 
